@@ -18,6 +18,7 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.swmansion.rnscreens.Screen.ActivityState
 import com.swmansion.rnscreens.events.ScreenDismissedEvent
+import android.util.Log
 
 open class ScreenContainer(
     context: Context?,
@@ -319,7 +320,14 @@ open class ScreenContainer(
     ) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         for (i in 0 until childCount) {
-            getChildAt(i).measure(widthMeasureSpec, heightMeasureSpec)
+            val child = getChildAt(i)
+            if (child.visibility != View.GONE) {
+                try {
+                    child.measure(widthMeasureSpec, heightMeasureSpec)
+                } catch (e: Exception) {
+                    Log.w("ScreenContainer", "Child measure failed", e)
+                }
+            }
         }
     }
 
